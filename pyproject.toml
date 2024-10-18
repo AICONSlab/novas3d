@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "novas3d"
+version = "0.1.1a3"
+description = ""
+authors = ["Matthew Rozak <matthew.rozak@mail.utoronto.ca>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8, <3.9"
+monai = "0.8.0"
+torch = "1.10.0"
+matplotlib = "3.4.2"
+nibabel = "3.2.1"
+numpy = "1.23.0"
+scikit-image = "0.19.3"
+antspyx = "^0.5.3"
+tifffile = "2021.11.2"
+tqdm = "^4.66.5"
+connected-components-3d = "3.9.1"
+vg = "2.0.0"
+pytransform3d = "2.1.0"
+scipy = "1.10.1"
+networkx = "2.6.3"
+ignite = "1.1.0"
+pytorch-ignite = "0.4.7"
+sknw = "^0.15"
+scikit-learn = "1.0.2"
+einops = "0.3.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
