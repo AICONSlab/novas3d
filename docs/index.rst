@@ -1,22 +1,39 @@
-Welcome to Lumache's documentation!
-===================================
+.. HippMapp3r documentation master file, created by
+   sphinx-quickstart on Fri Dec 14 15:34:18 2018.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+Welcome to HippMapp3r's documentation!
+==================================
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+.. image:: images/hippmapper_icon.png
+    :width: 550px
+    :alt: Graph abstract
+    :align: center
 
-.. note::
+*HippMapp3r* (pronounced hippmapper) is a CNN-based segmentation technique of the whole hippocampus
+using MRI images from BrainLab.
+It can deal with brains with extensive atrophy and segments the hippocampi in seconds.
+It uses a T1-weighted image as the only input and segments skull-stripped images.
+Note: skull-stripping is a required preprocessing step if the skull is present.
 
-   This project is under active development.
+Copyright (C) 2019 AICONSLab.
 
-Contents
---------
+.. image:: images/graph_abstract.png
+    :width: 550px
+    :alt: Graph abstract
+    :align: center
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   :hidden:
 
-   usage
-   api
+   before_install
+   install
+   beginner
+   hipp_seg
+   issues
+   docker
+
+
