@@ -20,9 +20,9 @@
 import myst_parser
 # -- Project information -----------------------------------------------------
 
-project = 'HippMapp3r'
-copyright = '2018, BrainLab'
-author = 'Maged Goubran, Edward Ntiri, Melissa Holmes, Hassan Akhavein, Sandra Black'
+project = 'NOVAS3D'
+copyright = '2018, Functional Brain Imaging Lab'
+author = 'Matthew Rozak, Bojana Stefanovic, Maged Goubran'
 
 # The short X.Y version
 version = ''
@@ -108,7 +108,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'HippMapp3rdoc'
+htmlhelp_basename = 'NOVAS3Ddoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
