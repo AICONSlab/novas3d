@@ -2,27 +2,23 @@
 
 ## Python
 For the main required Python packages (numpy, scipy, etc.) we recommend using
-[Anaconda for Python 3.6](https://www.continuum.io/downloads)
+[Anaconda for Python 3.8](https://www.continuum.io/downloads)
 
 
-## ANTs & Convert3D (c3d)
-
-If either ANTs or c3d are not installed on your machine, run `install_depends.sh`, located in the project directory. The required software will be installed in the `depends` directory
-
-## Installing package and dependencies for HippMapp3r locally
+## Installing package and dependencies for NOVAS3D locally
 
 1. Clone repository
 
-        git clone https://github.com/mgoubran/HippMapp3r.git HippMapp3r
+        git clone https://github.com/mrozak4/novas3d.git novas3d
 
         (or install zip file and uncompress)
 
-        cd HippMapp3r
+        cd novas2d
 
-    If you want to create a virtual environment where HippMapp3r can be run,
+    If you want to create a virtual environment where NOVAS3D can be run,
 
-        conda create -n hippmapper python=3.6 anaconda
-        source activate hippmapper
+        conda create -n novas3d python=3.8 anaconda
+        source activate novas3d
     
     To end the session, deactivate the environment
     
@@ -30,42 +26,24 @@ If either ANTs or c3d are not installed on your machine, run `install_depends.sh
     
     To delete the environment,
     
-        conda env remove --name hippmapper
+        conda env remove --name novas3d
 
 2. Install dependencies
     
-        pip install git+https://www.github.com/keras-team/keras-contrib.git
-    
-    If the computer you are using has a GPU:
-        
-        pip install -e .[hippmapper_gpu]
+        pip install git+https://github.com/Image-Py/sknw.git@18f18ab94794964a6dd7a76dd8a2c5c00dab6fd1
+        pip install -i https://test.pypi.org/simple/ novas3d
 
-    If not:
-    
-        pip install -e .[hippmapper]
+3. Download example data
 
-3. Test the installation by running
+        git clone https://huggingface.co/datasets/mrozak/novas3d_example_data
 
-        hippmapper --help
-        
-   To confirm that the command line function works, and
-   
-        hippmapper
-        
-   To launch the interactive GUI.
 
-## Download deep models
+4. Test the installation by running the tutorial in jupyter 
 
-Download the models from [this link](https://drive.google.com/open?id=10aVCDurd_mcB49mJfwm658IZg33u0pd2) and place them in the `models` directory
+        jupyter notebook tutorial.ipynb
 
-## For tab completion
-    pip3 install argcomplete
-    activate-global-python-argcomplete
-
-## Updating HippMapp3r
-To update HippMapp3r, navigate to the directory where HippMapp3r was cloned and run
+## Updating NOVAS3D
+To update NOVAS3D, navigate to the directory where NOVAS3D was cloned and run
 
     git pull
-    pip install -e .[{option}] -process-dependency-links
-    
-where "option" is dependent on whether or not you have a GPU (see package installation steps above)
+    pip install -i https://test.pypi.org/simple/ novas3d
