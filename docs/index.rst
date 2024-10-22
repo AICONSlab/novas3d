@@ -23,7 +23,7 @@ as an edge attribute.
 
 Copyright (C) 2019 AICONSLab.
 
-.. image:: Computational_pipeline.png
+.. image:: images/Computational_pipeline.png
     :width: 550px
     :alt: Graph abstract
     :align: center
