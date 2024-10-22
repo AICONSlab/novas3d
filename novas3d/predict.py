@@ -205,6 +205,9 @@ def get_model(spatial_dims=3,
     # Use DataParallel for multi-GPU training
     model = torch.nn.DataParallel(model)
 
+    if not gpu:
+        model = model.module
+
     # Move model to device
     model.to(device)
 
