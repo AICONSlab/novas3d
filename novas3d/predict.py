@@ -148,8 +148,7 @@ class TIFFReader(ImageReader):
             return _stack_images(img_array, compatible_meta), compatible_meta
 
 
-def get_model(parameter_file='novas3d/parameters436.pickle',
-              spatial_dims=3,
+def get_model(spatial_dims=3,
               in_channels=2,
               out_channels=3,
               img_size=(128, 128, 128),
@@ -158,7 +157,8 @@ def get_model(parameter_file='novas3d/parameters436.pickle',
               mlp_dim=3072,
               pos_embed="perceptron",
               res_block=True,
-              norm_name="instance",):
+              norm_name="instance",
+              gpu = True):
     """
     Get the UNETR model for prediction.
 
@@ -207,7 +207,7 @@ def get_model(parameter_file='novas3d/parameters436.pickle',
     # Move model to device
     model.to(device)
 
-    if torch.cuda.is_available():
+    if torch.cuda.is_available() and gpu != False:
         # Load pre-trained model weights
         model.load_state_dict(torch.load(
             "novas3d/best_metric_model_rerun.pth"))
@@ -359,7 +359,7 @@ class PredictWarped:
 
     """
 
-    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim):
+    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=True):
         self.data_dict = data_dict
         self.config = config
         self.parameter_file = parameter_file
@@ -380,6 +380,7 @@ class PredictWarped:
         self.b_max = b_max
         self.clip = clip
         self.channel_dim = channel_dim
+        self.gpu = gpu
 
     def get_model(self):
         """
@@ -399,7 +400,8 @@ class PredictWarped:
                           self.mlp_dim, 
                           self.pos_embed, 
                           self.res_block, 
-                          self.norm_name)
+                          self.norm_name,
+                          self.gpu)
         return model
 
     def get_pred_transforms(self):
