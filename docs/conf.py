@@ -135,8 +135,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'HippMapp3r.tex', 'HippMapp3r Documentation',
-     'Maged Goubran, Edward Ntiri, Melissa Holmes, Hassan Akhavein, Sandra Black', 'manual'),
+    (master_doc, 'NOVAS3D.tex', 'NOVAS3D Documentation',
+     'Matthew Rozak, Bojana Stefanovic, Maged Goubran', 'manual'),
 ]
 
 
@@ -145,7 +145,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'hippmapper', 'HippMapp3r Documentation',
+    (master_doc, 'NOVAS3D', 'NOVAS3D Documentation',
      [author], 1)
 ]
 
@@ -156,7 +156,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'HippMapp3r', 'HippMapp3r Documentation',
-     author, 'HippMapp3r', 'One line description of project.',
+    (master_doc, 'NOVAS3D', 'NOVAS3D Documentation',
+     author, 'NOVAS3D', 'One line description of project.',
      'Miscellaneous'),
 ]

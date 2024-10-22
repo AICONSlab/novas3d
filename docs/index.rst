@@ -6,7 +6,7 @@
 Welcome to NOVAS3D's documentation!
 ==================================
 
-.. image:: images/hippmapper_icon.png
+.. image:: images/novas3dlogo.png
     :width: 550px
     :alt: Graph abstract
     :align: center

@@ -13,7 +13,7 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
 
         (or install zip file and uncompress)
 
-        cd novas2d
+        cd novas3d
 
     If you want to create a virtual environment where NOVAS3D can be run,
 
