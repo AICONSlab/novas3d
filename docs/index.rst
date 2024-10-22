@@ -21,8 +21,6 @@ network common to all timepoints. Each vessel segment is represented as an edge 
 with the nodes as their branching points. The radius of each vessel segment is also stored 
 as an edge attribute.
 
-Copyright (C) 2019 AICONSLab.
-
 .. image:: images/Computational_pipeline.png
     :width: 550px
     :alt: Graph abstract
