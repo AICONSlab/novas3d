@@ -174,6 +174,7 @@ def get_model(spatial_dims=3,
         pos_embed (str): Type of positional embedding.
         res_block (bool): Whether to use residual blocks.
         norm_name (str): Name of the normalization layer.
+        gpu (bool): Whether to use GPU for computation.
 
     Returns:
         torch.nn.Module: The UNETR model for prediction.
@@ -184,7 +185,7 @@ def get_model(spatial_dims=3,
         params = pickle.load(handle)
 
     # Set device for model prediction
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if (torch.cuda.is_available() and gpu == True) else "cpu")
 
     # Create UNETR model
     model = UNETR(
@@ -350,6 +351,7 @@ class PredictWarped:
         b_max (float): The maximum background value.
         clip (bool): Whether to clip the values.
         channel_dim (int): The dimension of the channel.
+        gpu (bool): Whether to use GPU for computation.
     
     Methods:
         get_model(): Retrieves the model for prediction.
