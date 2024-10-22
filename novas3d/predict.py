@@ -227,7 +227,7 @@ def get_model(spatial_dims=3,
 def predict(pred_data, 
             num_evals=20,
             num_channels_out=3, 
-            model = get_model(), 
+            model = get_model(gpu=False), 
             device='cpu',
             roi_size = (128, 128, 128),
             sw_batch_size = 64):
@@ -253,7 +253,7 @@ def predict(pred_data,
     pred_array = empty((num_evals,num_channels_out,_shape[2],_shape[3],_shape[4]),dtype=float16)
 
     # Perform sliding window inference for the specified number of evaluations
-    for j in tqdm(range(num_evals)):
+    for j in range(num_evals):
         # define softmax for the predicted outputs
         softmax = torch.nn.Softmax(dim=1)
         # Perform sliding window inference
@@ -443,7 +443,7 @@ class PredictWarped:
             None
         """
         # Perform the prediction
-        model = get_model(self.parameter_file, self.spatial_dims, self.in_channels, self.out_channels, self.img_size, self.feature_size, self.hidden_size, self.mlp_dim, self.pos_embed, self.res_block, self.norm_name)
+        model = get_model(self.parameter_file, self.spatial_dims, self.in_channels, self.out_channels, self.img_size, self.feature_size, self.hidden_size, self.mlp_dim, self.pos_embed, self.res_block, self.norm_name,self.gpu)
         pred_transforms = get_pred_transforms(self.spacing, self.i_min, self.i_max, self.b_min, self.b_max, self.clip, self.channel_dim)
         pred_ds = Dataset(data=self.data_dict, transform=pred_transforms)
         pred_loader = DataLoader(pred_ds, batch_size=1, shuffle=False)
