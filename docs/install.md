@@ -40,7 +40,7 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
 
 4. Test the installation by running the tutorial in jupyter 
 
-        jupyter notebook tutorial.ipynb
+        jupyter notebook Tutorial.ipynb
 
 ## Updating NOVAS3D
 To update NOVAS3D, navigate to the directory where NOVAS3D was cloned and run
