@@ -6,7 +6,7 @@
 Welcome to NOVAS3D's documentation!
 ==================================
 
-.. image:: images/novas3dlogo.png
+.. image:: images/ezgif-2-66f21f6470.png
     :width: 550px
     :alt: Graph abstract
     :align: center
