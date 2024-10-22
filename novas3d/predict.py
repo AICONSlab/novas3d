@@ -204,21 +204,16 @@ def get_model(spatial_dims=3,
     )
 
     # Use DataParallel for multi-GPU training
-    model = torch.nn.DataParallel(model)
+    # model = torch.nn.DataParallel(model)
 
     # Move model to device
     model.to(device)
 
-    if torch.cuda.is_available() and gpu != False:
-        # Load pre-trained model weights
-        model.load_state_dict(torch.load(
-            "novas3d/best_metric_model_rerun.pth"))
-
-    else: 
-        # Load pre-trained model weights
-        model.load_state_dict(torch.load(
-            "novas3d/best_metric_model_rerun.pth",
-            map_location=torch.device('cpu')))
+    if device.type == 'cuda':
+        model.load_state_dict(torch.load("novas3d/best_metric_model_rerun.pth"))
+    else:
+        model.load_state_dict(torch.load("novas3d/best_metric_model_rerun.pth", 
+                                         map_location=device))
 
     model.eval()
 
