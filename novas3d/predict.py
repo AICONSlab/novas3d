@@ -186,6 +186,7 @@ def get_model(spatial_dims=3,
 
     # Set device for model prediction
     device = torch.device("cuda" if (torch.cuda.is_available() and gpu == True) else "cpu")
+    print(device)
 
     # Create UNETR model
     model = UNETR(
@@ -205,9 +206,6 @@ def get_model(spatial_dims=3,
     # Use DataParallel for multi-GPU training
     model = torch.nn.DataParallel(model)
 
-    if not gpu:
-        model = model.module
-
     # Move model to device
     model.to(device)
 
@@ -221,6 +219,7 @@ def get_model(spatial_dims=3,
         model.load_state_dict(torch.load(
             "novas3d/best_metric_model_rerun.pth",
             map_location=torch.device('cpu')))
+
     model.eval()
 
     for m in model.modules():
