@@ -362,7 +362,6 @@ class PredictWarped:
     def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=True):
         self.data_dict = data_dict
         self.config = config
-        self.parameter_file = parameter_file
         self.spatial_dims = spatial_dims
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -390,8 +389,7 @@ class PredictWarped:
             model: The model for prediction.
         """
         # Get the model for prediction
-        model = get_model(self.parameter_file, 
-                          self.spatial_dims,
+        model = get_model(self.spatial_dims,
                           self.in_channels, 
                           self.out_channels, 
                           self.img_size, 
@@ -443,7 +441,7 @@ class PredictWarped:
             None
         """
         # Perform the prediction
-        model = get_model(self.parameter_file, self.spatial_dims, self.in_channels, self.out_channels, self.img_size, self.feature_size, self.hidden_size, self.mlp_dim, self.pos_embed, self.res_block, self.norm_name,self.gpu)
+        model = get_model(self.spatial_dims, self.in_channels, self.out_channels, self.img_size, self.feature_size, self.hidden_size, self.mlp_dim, self.pos_embed, self.res_block, self.norm_name,self.gpu)
         pred_transforms = get_pred_transforms(self.spacing, self.i_min, self.i_max, self.b_min, self.b_max, self.clip, self.channel_dim)
         pred_ds = Dataset(data=self.data_dict, transform=pred_transforms)
         pred_loader = DataLoader(pred_ds, batch_size=1, shuffle=False)
