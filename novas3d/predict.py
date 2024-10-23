@@ -148,7 +148,8 @@ class TIFFReader(ImageReader):
             return _stack_images(img_array, compatible_meta), compatible_meta
 
 
-def get_model(spatial_dims=3,
+def get_model(parameter_file='NOVAS3D_Vessel_and_Neuron_Segmentation/parameters.pickle',
+              spatial_dims=3,
               in_channels=2,
               out_channels=3,
               img_size=(128, 128, 128),
@@ -157,8 +158,7 @@ def get_model(spatial_dims=3,
               mlp_dim=3072,
               pos_embed="perceptron",
               res_block=True,
-              norm_name="instance",
-              gpu = True):
+              norm_name="instance",):
     """
     Get the UNETR model for prediction.
 
@@ -174,19 +174,17 @@ def get_model(spatial_dims=3,
         pos_embed (str): Type of positional embedding.
         res_block (bool): Whether to use residual blocks.
         norm_name (str): Name of the normalization layer.
-        gpu (bool): Whether to use GPU for computation.
 
     Returns:
         torch.nn.Module: The UNETR model for prediction.
     """
 
     # Load parameters from pickle file
-    with open('novas3d/parameters436.pickle', 'rb') as handle:
+    with open(parameter_file, 'rb') as handle:
         params = pickle.load(handle)
 
     # Set device for model prediction
-    device = torch.device("cuda" if (torch.cuda.is_available() and gpu == True) else "cpu")
-    print(device)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Create UNETR model
     model = UNETR(
@@ -204,17 +202,21 @@ def get_model(spatial_dims=3,
     )
 
     # Use DataParallel for multi-GPU training
-    # model = torch.nn.DataParallel(model)
+    model = torch.nn.DataParallel(model)
 
     # Move model to device
     model.to(device)
 
-    if device.type == 'cuda':
-        model.load_state_dict(torch.load("novas3d/best_metric_model_rerun.pth"))
-    else:
-        model.load_state_dict(torch.load("novas3d/best_metric_model_rerun.pth", 
-                                         map_location=device))
+    if torch.cuda.is_available():
+        # Load pre-trained model weights
+        model.load_state_dict(torch.load(
+            sub('parameters.pickle', "model.pth",parameter_file)))
 
+    else: 
+        # Load pre-trained model weights
+        model.load_state_dict(torch.load(
+            sub('parameters.pickle', "model.pth",parameter_file),
+            map_location=torch.device('cpu')))
     model.eval()
 
     for m in model.modules():
@@ -225,7 +227,7 @@ def get_model(spatial_dims=3,
 def predict(pred_data, 
             num_evals=20,
             num_channels_out=3, 
-            model = get_model(gpu=False), 
+            model = get_model(), 
             device='cpu',
             roi_size = (128, 128, 128),
             sw_batch_size = 64):
@@ -251,7 +253,7 @@ def predict(pred_data,
     pred_array = empty((num_evals,num_channels_out,_shape[2],_shape[3],_shape[4]),dtype=float16)
 
     # Perform sliding window inference for the specified number of evaluations
-    for j in range(num_evals):
+    for j in tqdm(range(num_evals)):
         # define softmax for the predicted outputs
         softmax = torch.nn.Softmax(dim=1)
         # Perform sliding window inference
@@ -348,7 +350,6 @@ class PredictWarped:
         b_max (float): The maximum background value.
         clip (bool): Whether to clip the values.
         channel_dim (int): The dimension of the channel.
-        gpu (bool): Whether to use GPU for computation.
     
     Methods:
         get_model(): Retrieves the model for prediction.
@@ -358,9 +359,10 @@ class PredictWarped:
 
     """
 
-    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=True):
+    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim):
         self.data_dict = data_dict
         self.config = config
+        self.parameter_file = parameter_file
         self.spatial_dims = spatial_dims
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -378,7 +380,6 @@ class PredictWarped:
         self.b_max = b_max
         self.clip = clip
         self.channel_dim = channel_dim
-        self.gpu = gpu
 
     def get_model(self):
         """
@@ -388,7 +389,8 @@ class PredictWarped:
             model: The model for prediction.
         """
         # Get the model for prediction
-        model = get_model(self.spatial_dims,
+        model = get_model(self.parameter_file, 
+                          self.spatial_dims,
                           self.in_channels, 
                           self.out_channels, 
                           self.img_size, 
@@ -397,8 +399,7 @@ class PredictWarped:
                           self.mlp_dim, 
                           self.pos_embed, 
                           self.res_block, 
-                          self.norm_name,
-                          self.gpu)
+                          self.norm_name)
         return model
 
     def get_pred_transforms(self):
@@ -440,7 +441,7 @@ class PredictWarped:
             None
         """
         # Perform the prediction
-        model = get_model(self.spatial_dims, self.in_channels, self.out_channels, self.img_size, self.feature_size, self.hidden_size, self.mlp_dim, self.pos_embed, self.res_block, self.norm_name,self.gpu)
+        model = get_model(self.parameter_file, self.spatial_dims, self.in_channels, self.out_channels, self.img_size, self.feature_size, self.hidden_size, self.mlp_dim, self.pos_embed, self.res_block, self.norm_name)
         pred_transforms = get_pred_transforms(self.spacing, self.i_min, self.i_max, self.b_min, self.b_max, self.clip, self.channel_dim)
         pred_ds = Dataset(data=self.data_dict, transform=pred_transforms)
         pred_loader = DataLoader(pred_ds, batch_size=1, shuffle=False)
