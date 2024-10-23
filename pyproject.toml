@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "novas3d"
-version = "0.1.1a3"
+version = "0.1.1a25"
 description = ""
 authors = ["Matthew Rozak <matthew.rozak@mail.utoronto.ca>"]
 readme = "README.md"
@@ -13,7 +13,7 @@ matplotlib = "3.4.2"
 nibabel = "3.2.1"
 numpy = "1.23.0"
 scikit-image = "0.19.3"
-antspyx = "^0.5.3"
+antspyx = "0.5.3"
 tifffile = "2021.11.2"
 tqdm = "^4.66.5"
 connected-components-3d = "3.9.1"
@@ -23,9 +23,15 @@ scipy = "1.10.1"
 networkx = "2.6.3"
 ignite = "1.1.0"
 pytorch-ignite = "0.4.7"
-sknw = "^0.15"
+sknw = "*"
 scikit-learn = "1.0.2"
 einops = "0.3.2"
+jupyter = '1.0.0'
+notebook = '6.5.6'
+ipython = '8.12.2'
+jsonschema = '4.18.0'
+blosc2 = '2.0.0'
+cython = '>=0.29.21'
 
 
 [build-system]
