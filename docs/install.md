@@ -37,6 +37,10 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
 
         git clone https://huggingface.co/datasets/mrozak/novas3d_example_data
 
+4. Download the model
+
+        git clone https://huggingface.co/mrozak/NOVAS3D_Vessel_and_Neuron_Segmentation
+
 
 4. Test the installation by running the tutorial in jupyter 
 
