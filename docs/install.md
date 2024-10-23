@@ -42,7 +42,7 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
         git clone https://huggingface.co/mrozak/NOVAS3D_Vessel_and_Neuron_Segmentation
 
 
-4. Test the installation by running the tutorial in jupyter 
+5. Test the installation by running the tutorial in jupyter 
 
         jupyter notebook Tutorial.ipynb
 
