@@ -158,7 +158,8 @@ def get_model(parameter_file='NOVAS3D_Vessel_and_Neuron_Segmentation/parameters.
               mlp_dim=3072,
               pos_embed="perceptron",
               res_block=True,
-              norm_name="instance",):
+              norm_name="instance",
+              gpu = False):
     """
     Get the UNETR model for prediction.
 
@@ -184,7 +185,7 @@ def get_model(parameter_file='NOVAS3D_Vessel_and_Neuron_Segmentation/parameters.
         params = pickle.load(handle)
 
     # Set device for model prediction
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if (torch.cuda.is_available() and gpu == True) else "cpu")
 
     # Create UNETR model
     model = UNETR(
@@ -201,22 +202,27 @@ def get_model(parameter_file='NOVAS3D_Vessel_and_Neuron_Segmentation/parameters.
         dropout_rate=params["dropout"]
     )
 
-    # Use DataParallel for multi-GPU training
-    model = torch.nn.DataParallel(model)
-
     # Move model to device
     model.to(device)
 
-    if torch.cuda.is_available():
+    if (torch.cuda.is_available() and gpu == True):
+        # Use DataParallel for multi-GPU training
+        model = torch.nn.DataParallel(model)
         # Load pre-trained model weights
         model.load_state_dict(torch.load(
             sub('parameters.pickle', "model.pth",parameter_file)))
 
     else: 
+        from collections import OrderedDict
+        state_dict = torch.load(sub('parameters.pickle', "model.pth",parameter_file), map_location='cpu')
+        new_state_dict = OrderedDict()
+        for k, v in state_dict.items():
+            new_state_dict[k.replace("module.", "")] = v
+        model.load_state_dict(new_state_dict)
         # Load pre-trained model weights
-        model.load_state_dict(torch.load(
-            sub('parameters.pickle', "model.pth",parameter_file),
-            map_location=torch.device('cpu')))
+        #model.load_state_dict(torch.load(
+        #    sub('parameters.pickle', "model.pth",parameter_file),
+        #    map_location=torch.device('cpu')))
     model.eval()
 
     for m in model.modules():
@@ -253,7 +259,7 @@ def predict(pred_data,
     pred_array = empty((num_evals,num_channels_out,_shape[2],_shape[3],_shape[4]),dtype=float16)
 
     # Perform sliding window inference for the specified number of evaluations
-    for j in tqdm(range(num_evals)):
+    for j in range(num_evals):
         # define softmax for the predicted outputs
         softmax = torch.nn.Softmax(dim=1)
         # Perform sliding window inference
@@ -359,7 +365,7 @@ class PredictWarped:
 
     """
 
-    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim):
+    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=False):
         self.data_dict = data_dict
         self.config = config
         self.parameter_file = parameter_file
@@ -380,6 +386,7 @@ class PredictWarped:
         self.b_max = b_max
         self.clip = clip
         self.channel_dim = channel_dim
+        self.gpu = gpu
 
     def get_model(self):
         """
@@ -399,7 +406,8 @@ class PredictWarped:
                           self.mlp_dim, 
                           self.pos_embed, 
                           self.res_block, 
-                          self.norm_name)
+                          self.norm_name,
+                          self.gpu)
         return model
 
     def get_pred_transforms(self):
@@ -447,7 +455,7 @@ class PredictWarped:
         pred_loader = DataLoader(pred_ds, batch_size=1, shuffle=False)
         config = self.config
         with no_grad():
-            for i, pred_data in enumerate(pred_loader):
+            for i, pred_data in tqdm(enumerate(pred_loader)):
                 if not exists(sub(config["base_file_extension"], config["pred_file_extension"], sub(config["in_dir"], config["out_dir"], self.data_dict[i]["image"]))):
                     new_file_name = sub(config["in_dir"], config["out_dir"], self.data_dict[i]["image"])
                     pred_array = predict(pred_data, num_evals=config["num_evals"], model=model)
