@@ -35,6 +35,10 @@ def save_std_file(file,
 
     Args:
         file (str): The path to the file containing the predicted data.
+        in_directory (str): The input directory path.
+        out_directory (str): The output directory path.
+        in_tag (str): The initial tag for predicted data.
+        final_tag (str): The final tag for standard deviation data.
 
     Returns:
         None
@@ -53,7 +57,7 @@ def save_std_file(file,
 
 class SaveStdFile:
     """
-    Initializes an instance of the SaveStdFile class.
+    Initializes an instance of the SaveStdFile class. Calculates the standard deviation for predicted data. Saves the standard deviation files.
 
     Args:
         files (list): List of file paths.
@@ -61,16 +65,18 @@ class SaveStdFile:
         out_directory (str): Output directory path.
         in_tag (str): Initial tag.
         final_tag (str): Final tag.
+        skip_existing (bool): Skip files where std already exists.
     
     Methods:
         std(): Save the standard deviation files.  
     """
-    def __init__(self, files, in_directory, out_directory, in_tag, final_tag):
+    def __init__(self, files, in_directory, out_directory, in_tag, final_tag,skip_existing=False):
         self.files = files
         self.in_directory = in_directory
         self.out_directory = out_directory
         self.in_tag = in_tag
         self.final_tag = final_tag
+        self.skip_existing = skip_existing
 
     def std(self):
         """
@@ -82,13 +88,13 @@ class SaveStdFile:
         # Iterate over the files list
         for file in tqdm(self.files):
             # Call the save_std_file function with the file path and other parameters
-            save_std_file(file, self.in_directory, self.out_directory, self.in_tag, self.final_tag)
+            save_std_file(file, self.in_directory, self.out_directory, self.in_tag, self.final_tag,self.skip_existing)
 
 
 
 class Binarize:
     """
-    Initializes the Binarize class.
+    Initializes the Binarize class. This class is used to binarize the files in the specified directory based on mean and standard deviation thresholds.
 
     Args:
         directory (str): The directory path.
@@ -99,6 +105,7 @@ class Binarize:
         mean_tag (str): The mean tag.
         std_tag (str): The standard deviation tag.
         seg_tag (str): The segmentation tag.
+        skip_existing (bool): Skip existing files that have already been binarized.
     
     methods:
         binarize_files(): Binarizes the files in the directory.
@@ -185,7 +192,7 @@ class Binarize:
 
 class NeuronDistanceCalculator:
     """
-    Calculates the distance between neurons based on given parameters.
+    Calculates the distance between neurons based on given parameters. Saves the distance transform of the Neuron segmentation array.
 
     Args:
         files (list): List of file paths.
@@ -275,6 +282,21 @@ class SegmentationMaskUnion:
         Process a list of images by performing binary dilation, calculating intersection over union (IOU),
         performing post-processing, and saving the processed images as .mat and .npy files.
 
+        Args:
+            files (list): List of image file paths.
+            dic (dict): Dictionary containing additional information.
+            in_directory (str): Path to the input directory.
+            out_directory (str): Path to the output directory.
+            in_suffix (str): Suffix of the initial files.
+            final_suffix_mat (str): Suffix of the final .mat files.
+            final_suffix_npy (str): Suffix of the final .npy files.
+            timepoint_suffixes (list): List of timepoint suffixes. ex: ['_0001', '_0002', '_0003']
+            IOU_thresh (float): Intersection over Union (IOU) threshold.
+            thresh_fill_holes (int): Threshold for filling holes in the segmented image.
+            thresh_remove_small_comps (int): Threshold for removing small connected components in the segmented image.
+            n_interations_binary_closing (int): Number of iterations for binary closing.
+            skip_existing (bool): Skip existing files that have already been processed.
+
         Returns:
             None
         """
@@ -318,11 +340,11 @@ class SegmentationMaskUnion:
 
 class GraphGenerator:
     """
-    Generates graphs based on input files and parameters.
+    Generates graphs based on input files and parameters. Saves the graphs as pickle files. 
 
     Args:
         files (list): List of input file paths.
-        dic (dict): Dictionary containing additional information.
+        dic (dict): Dictionary containing paried files. Key is the reference file and value is a list of matching files.
         in_directory (str): Path to the input directory.
         out_directory (str): Path to the output directory.
         in_suffix (str): Suffix of the initial files.
@@ -378,7 +400,7 @@ class GraphGenerator:
         
         for file in tqdm(self.files):
             # Check if the output file already exists
-            # if not exists(sub(self.in_directory, self.out_directory, sub(self.in_suffix, self.final_suffix_pickle, file))):
+             if self.skip_existing==False or not exists(sub(self.in_directory, self.out_directory, sub(self.in_suffix, self.final_suffix_pickle, file))):
             # Check if the corresponding input file exists
                 if exists(sub(self.ref_timepoint + self.in_suffix, self.in_suffix_mat, file)):
                     # Load the skeleton image from the pickle file
@@ -438,6 +460,53 @@ class GraphGenerator:
                                     print('IOU too low')
 
 class VesselRadiiCalc:
+
+    '''
+    Initializes an instance of the VesselRadiiCalc class. Calculates the radii of vessels based on given parameters. Saves the radii in the graph.
+
+    Args:
+        files (list): List of file paths.
+        in_directory (str): Input directory path.
+        img_directory (str): Image directory path.
+        mean_directory (str): Mean directory path.
+        std_directory (str): Standard deviation directory path.
+        out_directory (str): Output directory path.
+        pickle_file_suffix (str): Suffix of the pickle files.
+        out_pickle_suffix (str): Suffix of the output pickle files.
+        img_suffix (str): Suffix of the image files.
+        seg_suffix (str): Suffix of the segmented files.
+        mean_suffix (str): Suffix of the mean files.
+        std_suffix (str): Suffix of the standard deviation files.
+        neuron_distance_suffix (str): Suffix of the neuron distance files.
+        second_channel (bool): Second channel flag. Denotes the presence of a second channel.
+        neuron_channel (bool): Neuron channel flag. Denotes the presence of a neuron channel.
+        psf (list): Point spread function.
+        spacing (float): Spacing value for pixel size along each axis.
+        vessel_segment_limit (int): Vessel segment limit. If larger than the limit, the file is skipped.
+        max_pixel_value (int): Maximum pixel value.
+        n_iter_deconv (int): Number of iterations for deconvolution.
+        grid_size_psf_deconv (int): Grid size for deconvolution. This must be an odd number.
+        sampling (float): Sampling in microns to calculate the radii.
+        n_cores (int): Number of cores.
+        filter_radii (bool): Filter radii with a butterworth filter.
+        butter_N (int): Butterworth filter order.
+        butter_Wn (float): Butterworth filter frequency.
+        butter_btype (str): Butterworth filter type.
+        butter_fs (float): Butterworth filter frequency.
+        skip_existing (bool): Skip existing files that have already been processed.
+    
+        return:
+            Saves the radii in the graph, along with the standard deviation of the readius estimates along the path.
+            If the filter_radii flag is set to True, the radii are filtered with a butterworth filter and saved under the path_weights key in the graph. The unfiltered radii are saved under the path_weights_unfiltered key in the graph.
+            If the filter_radii flag is set to False, the radii are saved as is under the path_weights key in the graph.
+            In both cases, the mean radii estimate is calculated from unfilterd radii estimates and saved under the radii key in the graph.
+            The standard deviation of the radii estimates is calculated and saved under the radii_std key in the graph.
+            If neuron_channel is set to True, the mean distance to the closest neuron is calculated and saved under the mean_neuron_distance key in the graph.
+            If neuron_channel is set to True, the standard deviation of the distance to the closest neuron is calculated and saved under the neuron_distance_std key in the graph.
+            If neuron_channel is set to True, the distance to the closest neuron is saved under the neuron_distance_min key in the graph.
+
+    '''
+
     def __init__(self, files, in_directory, img_directory, mean_directory, std_directory, out_directory, pickle_file_suffix, out_pickle_suffix, img_suffix, seg_suffix, mean_suffix, std_suffix, neuron_distance_suffix, second_channel, neuron_channel, psf, spacing, vessel_segment_limit, max_pixel_value, n_iter_deconv, grid_size_psf_deconv, sampling, n_cores, filter_radii = False, butter_N = None, butter_Wn = None, butter_btype = None, butter_fs = None, skip_existing=False):
         self.files = files
         self.in_directory = in_directory
@@ -596,7 +665,8 @@ class VesselRadiiCalc:
                     graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['radii'] = mean(_vals)
                     graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['radii_std'] = std(_vals)
                     graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['path_weights'] = _vals
-                    graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['path_weights_unfiltered'] = _vals_unfiltered
+                    if self.filter:
+                        graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['path_weights_unfiltered'] = _vals_unfiltered
                     graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['path_weights_uncertanty'] = _vals_sigma
                     graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['end-0z'] = path[0][0]
                     graph[list(graph.edges)[i][0]][list(graph.edges)[i][1]]['end-0y'] = path[0][1]

@@ -333,11 +333,18 @@ def get_post_transforms():
 
 class PredictWarped:
     """
-    Initializes the PredictWarped class.
+    Class for performing prediction using the registered images. Saves the predicted images.
 
     Args:
         data_dict (dict): A dictionary containing the data for prediction.
         config (dict): A dictionary containing the configuration parameters.
+            The configuration parameters include:
+                - in_dir (str): The input directory.
+                - out_dir (str): The output directory.
+                - num_evals (int): The number of evaluations.
+                - base_file_extension (str): The base file extension.
+                - pred_file_extension (str): The prediction file extension.
+                - mean_file_extension (str): The mean file extension.
         parameter_file (str): The file path to the parameter file.
         spatial_dims (int): The number of spatial dimensions.
         in_channels (int): The number of input channels.
@@ -349,13 +356,15 @@ class PredictWarped:
         pos_embed (bool): Whether to use positional embedding.
         res_block (bool): Whether to use residual blocks.
         norm_name (str): The name of the normalization method.
-        spacing (tuple): The spacing between voxels.
-        i_min (float): The minimum intensity value.
-        i_max (float): The maximum intensity value.
-        b_min (float): The minimum background value.
-        b_max (float): The maximum background value.
+        spacing (tuple): The spacing between voxels. Reciprocal of the voxel size in um to resample to 1 um.
+        i_min (float): The minimum intensity value of raw images.
+        i_max (float): The maximum intensity value of raw images.
+        b_min (float): The minimum background value after normalization.
+        b_max (float): The maximum background value after noramlization.
         clip (bool): Whether to clip the values.
-        channel_dim (int): The dimension of the channel.
+        channel_dim (int): The dimension index of the colour channel.
+        gpu (bool): Whether to use the GPU.
+        skip_finished (bool): Whether to skip images that have already been predicted.
     
     Methods:
         get_model(): Retrieves the model for prediction.

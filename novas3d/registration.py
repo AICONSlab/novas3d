@@ -22,10 +22,8 @@ def register_paired_images(fix_file, mov_files, out_dir, in_filename_extension='
         flip (bool, optional): Whether to flip the moving image. Defaults to False.
 
     Returns:
-        list: List of displacement values for each registered image.
-
-    Raises:
-        FileNotFoundError: If any of the input image files are not found.
+        None
+        
     """
     
     # Read the fixed image
@@ -113,6 +111,25 @@ def register_paired_images(fix_file, mov_files, out_dir, in_filename_extension='
     imsave(out_dir + sub(in_filename_extension,final_filename_extension,basename(dirname(fix_file)) + '-' + basename(fix_file)),fix_numpy)
 
 class ImageRegistration:
+
+    """
+    Register images using ANTs registration. Save the registered images to an output directory.
+    
+    Args:
+        images (list): List of image files to register. Each timepoint should be its own file. Files should be tif stacks. Channel 1 should be the color channel. 
+        out_directory (str): Output directory to save the registered images.
+        in_filename_extension (str): Initial filename extension of the unregistered images.
+        final_filename_extension (str): Final filename extension of the registered images.
+        timepoint_suffixes (list): List of timepoint suffixes.
+        sigma (float): Sigma value for the registration.
+        flip (bool): Whether to flip the moving image based on metadata. (only work on images aquired with olympus systems, set to false if not sure if images were aquired on an olympus microscope)
+        dic (dictionary): dictionary of the image files with a reference image as the key and a list of moving images as the value.
+        skip_finished (bool): Whether to skip already registered images.
+    
+    Returns:
+        None
+    """
+
     def __init__(self, images, out_directory, in_filename_extension, final_filename_extension, timepoint_suffixes, sigma, flip, dic, skip_finished=False):
         self.images = images
         self.out_directory = out_directory
