@@ -28,7 +28,8 @@ def save_std_file(file,
                   in_directory='tmp',
                   out_directory='tmp',
                   in_tag='pred',
-                  final_tag='std'):
+                  final_tag='std',
+                  skip_existing=False):
     """
     Save the standard deviation file.
 
@@ -38,14 +39,16 @@ def save_std_file(file,
     Returns:
         None
     """
+
     # Check if the standard deviation file already exists
-    if not exists(sub(in_directory, out_directory, sub(in_tag, final_tag, file))):
+    if skip_existing==False or not exists(sub(in_directory, out_directory, sub(in_tag, final_tag, file))):
         # Load the predicted data
         pred = load(file)
         # Calculate the standard deviation along the first axis
         _std = std(pred, axis=0)
         # Save the standard deviation file
         save(sub(in_directory, out_directory, sub(in_tag, final_tag, file)), _std)
+        
 
 
 class SaveStdFile:
@@ -119,7 +122,7 @@ class Binarize:
     11. Saves the segmented image.
     """
 
-    def __init__(self, files, min_prob, max_var, in_directory, out_directory, mean_tag, std_tag, seg_tag):
+    def __init__(self, files, min_prob, max_var, in_directory, out_directory, mean_tag, std_tag, seg_tag, skip_existing=False):
         self.files = files
         self.min_prob = min_prob
         self.max_var = max_var
@@ -128,6 +131,7 @@ class Binarize:
         self.mean_tag = mean_tag
         self.std_tag = std_tag
         self.seg_tag = seg_tag
+        self.skip_existing = skip_existing
 
     def binarize_files(self):
         """
@@ -156,7 +160,7 @@ class Binarize:
             # Check if the segmented file already exists
             seg_file = sub(self.in_directory, self.out_directory, sub(self.mean_tag, self.seg_tag, file))
             print(seg_file)
-            if not exists(seg_file):
+            if self.skip_existing==False or not exists(seg_file):
                 # Check if the standard deviation file exists
                 std_file = sub(self.mean_tag,self.std_tag,file)
                 print(std_file)
@@ -198,7 +202,7 @@ class NeuronDistanceCalculator:
     Methods:
         calculate_distance(): Calculates the distance between neurons for each file in the given list.
     """
-    def __init__(self, files, min_prob, max_var, in_directory, out_directory, mean_tag, std_tag, neuron_distance_tag, seg_tag, seg_nrn_tag):
+    def __init__(self, files, min_prob, max_var, in_directory, out_directory, mean_tag, std_tag, neuron_distance_tag, seg_tag, seg_nrn_tag,skip_existing=False):
         self.files = files
         self.min_prob = min_prob
         self.max_var = max_var
@@ -209,6 +213,7 @@ class NeuronDistanceCalculator:
         self.neuron_distance_tag = neuron_distance_tag
         self.seg_tag = seg_tag
         self.seg_nrn_tag = seg_nrn_tag
+        self.skip_existing = skip_existing
 
     def calculate_distance(self):
         """
@@ -231,7 +236,7 @@ class NeuronDistanceCalculator:
         shuffle(files)
 
         for file in tqdm(files):
-            if not exists(sub(self.in_directory, self.out_directory, sub(self.mean_tag, self.neuron_distance_tag, file))):
+            if not exists(sub(self.in_directory, self.out_directory, sub(self.mean_tag, self.neuron_distance_tag, file))) or self.skip_existing==False:
                 if exists(sub(self.mean_tag, self.std_tag, file)):
                     mean = load(file)
                     std = load(sub(self.mean_tag, self.std_tag, file))
@@ -249,7 +254,7 @@ class NeuronDistanceCalculator:
 
 
 class SegmentationMaskUnion:
-    def __init__(self, files, dic, in_directory, out_directory, in_suffix, final_suffix_mat, final_suffix_npy, timepoint_suffixes, IOU_thresh, thresh_fill_holes, thresh_remove_small_comps, n_interations_binary_closing):
+    def __init__(self, files, dic, in_directory, out_directory, in_suffix, final_suffix_mat, final_suffix_npy, timepoint_suffixes, IOU_thresh, thresh_fill_holes, thresh_remove_small_comps, n_interations_binary_closing,skip_existing=False):
         self.files = files
         self.dic = dic
         self.in_directory = in_directory
@@ -262,6 +267,7 @@ class SegmentationMaskUnion:
         self.thresh_fill_holes = thresh_fill_holes
         self.thresh_remove_small_comps = thresh_remove_small_comps
         self.n_interations_binary_closing = n_interations_binary_closing
+        self.skip_existing = skip_existing
 
     # Define a method called process_images
     def process_images(self):
@@ -275,7 +281,7 @@ class SegmentationMaskUnion:
         # Iterate over each image in the list of files
         for image in tqdm(self.files):
             # Check if the processed image already exists
-            if not exists(sub(self.in_directory, self.out_directory, sub(self.in_suffix, self.final_suffix_mat, sub('_\d{4}', '', image)))):
+            if self.skip_existing==False or not exists(sub(self.in_directory, self.out_directory, sub(self.in_suffix, self.final_suffix_mat, sub('_\d{4}', '', image)))):
                 # Load the image and perform binary dilation
                 img = binary_dilation(load(image))
                 _img = copy(img)
@@ -333,7 +339,7 @@ class GraphGenerator:
 
     """
 
-    def __init__(self, files, dic, in_directory, out_directory, in_suffix, final_suffix_pickle, in_suffix_mat, final_suffix_tif, ref_timepoint, timepoint_suffixes, IOU_thresh, thresh_remove_terminal_segemnts):
+    def __init__(self, files, dic, in_directory, out_directory, in_suffix, final_suffix_pickle, in_suffix_mat, final_suffix_tif, ref_timepoint, timepoint_suffixes, IOU_thresh, thresh_remove_terminal_segemnts, skip_existing=False):
         self.files = files
         self.dic = dic
         self.in_directory = in_directory
@@ -346,6 +352,7 @@ class GraphGenerator:
         self.timepoint_suffixes = timepoint_suffixes
         self.IOU_thresh = IOU_thresh
         self.thresh_remove_terminal_segemnts = thresh_remove_terminal_segemnts
+        self.skip_existing = skip_existing
 
     def generate_graphs(self):
         """
@@ -431,7 +438,7 @@ class GraphGenerator:
                                     print('IOU too low')
 
 class VesselRadiiCalc:
-    def __init__(self, files, in_directory, img_directory, mean_directory, std_directory, out_directory, pickle_file_suffix, out_pickle_suffix, img_suffix, seg_suffix, mean_suffix, std_suffix, neuron_distance_suffix, second_channel, neuron_channel, psf, spacing, vessel_segment_limit, max_pixel_value, n_iter_deconv, grid_size_psf_deconv, sampling, n_cores, filter_radii = False, butter_N = None, butter_Wn = None, butter_btype = None, butter_fs = None):
+    def __init__(self, files, in_directory, img_directory, mean_directory, std_directory, out_directory, pickle_file_suffix, out_pickle_suffix, img_suffix, seg_suffix, mean_suffix, std_suffix, neuron_distance_suffix, second_channel, neuron_channel, psf, spacing, vessel_segment_limit, max_pixel_value, n_iter_deconv, grid_size_psf_deconv, sampling, n_cores, filter_radii = False, butter_N = None, butter_Wn = None, butter_btype = None, butter_fs = None, skip_existing=False):
         self.files = files
         self.in_directory = in_directory
         self.img_directory = img_directory
@@ -460,12 +467,13 @@ class VesselRadiiCalc:
         self.butter_Wn = butter_Wn
         self.butter_btype = butter_btype
         self.butter_fs = butter_fs
+        self.skip_existing = skip_existing
 
     def calc_radii_vessels(self, file):
 
         butter_b, butter_a = butter(self.butter_N, self.butter_Wn, btype=self.butter_btype, analog=False, fs=self.butter_fs)
 
-        if not exists(sub(self.in_directory, self.out_directory, sub(self.pickle_file_suffix, self.out_pickle_suffix, file))):
+        if self.skip_existing==False or not exists(sub(self.in_directory, self.out_directory, sub(self.pickle_file_suffix, self.out_pickle_suffix, file))):
             graph = read_gpickle(file)
             if len(graph.edges) < self.vessel_segment_limit:
                 img_file = sub(self.in_directory, self.img_directory, sub(self.pickle_file_suffix, self.img_suffix, file))

@@ -365,7 +365,7 @@ class PredictWarped:
 
     """
 
-    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=False):
+    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=False, skip_finished=False):
         self.data_dict = data_dict
         self.config = config
         self.parameter_file = parameter_file
@@ -387,6 +387,7 @@ class PredictWarped:
         self.clip = clip
         self.channel_dim = channel_dim
         self.gpu = gpu
+        self.skip_finished = skip_finished
 
     def get_model(self):
         """
@@ -456,7 +457,15 @@ class PredictWarped:
         config = self.config
         with no_grad():
             for i, pred_data in tqdm(enumerate(pred_loader)):
-                if not exists(sub(config["base_file_extension"], config["pred_file_extension"], sub(config["in_dir"], config["out_dir"], self.data_dict[i]["image"]))):
+                if self.skip_finished==False:
+                    new_file_name = sub(config["in_dir"], config["out_dir"], self.data_dict[i]["image"])
+                    pred_array = predict(pred_data, num_evals=config["num_evals"], model=model)
+                    #self.assertIsNotNone(pred_array)
+                    mean = float16(pred_array.mean(axis=0))
+                    save(sub(config["base_file_extension"], config['mean_file_extension'], new_file_name), mean)
+                    save(sub(config["base_file_extension"], config["pred_file_extension"], new_file_name), pred_array)
+                    
+                elif not exists(sub(config["base_file_extension"], config["pred_file_extension"], sub(config["in_dir"], config["out_dir"], self.data_dict[i]["image"]))):
                     new_file_name = sub(config["in_dir"], config["out_dir"], self.data_dict[i]["image"])
                     pred_array = predict(pred_data, num_evals=config["num_evals"], model=model)
                     #self.assertIsNotNone(pred_array)

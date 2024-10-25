@@ -113,7 +113,7 @@ def register_paired_images(fix_file, mov_files, out_dir, in_filename_extension='
     imsave(out_dir + sub(in_filename_extension,final_filename_extension,basename(dirname(fix_file)) + '-' + basename(fix_file)),fix_numpy)
 
 class ImageRegistration:
-    def __init__(self, images, out_directory, in_filename_extension, final_filename_extension, timepoint_suffixes, sigma, flip, dic):
+    def __init__(self, images, out_directory, in_filename_extension, final_filename_extension, timepoint_suffixes, sigma, flip, dic, skip_finished=False):
         self.images = images
         self.out_directory = out_directory
         self.in_filename_extension = in_filename_extension
@@ -122,14 +122,15 @@ class ImageRegistration:
         self.sigma = sigma
         self.flip = flip
         self.dic = dic
+        self.skip_finished = skip_finished
 
     def register_images(self):
         for image in tqdm(self.images):
             fix_file = sub('_\d{4}', '', image)
             warped_file = basename(dirname(fix_file)) + '-' + basename(fix_file)
             warped_file_path = self.out_directory + sub(self.in_filename_extension, self.final_filename_extension, warped_file)
-
-            if not exists(warped_file_path):
+                
+            if self.skip_finished==False or not exists(warped_file_path):
                 mov_files = get_mov_files(image, self.dic, self.in_filename_extension, self.timepoint_suffixes)
 
                 register_paired_images(fix_file,
