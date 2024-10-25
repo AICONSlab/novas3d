@@ -15,7 +15,7 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
 
         cd novas3d
 
-    If you want to create a virtual environment where NOVAS3D can be run,
+    If you want to create a virtual environment with anaconda where NOVAS3D can be run,
 
         conda create -n novas3d python=3.8
         source activate novas3d
@@ -27,6 +27,11 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
     To delete the environment,
     
         conda env remove --name novas3d
+
+    Alternative: Use virtualenv to make a virtual enviornment
+        
+        virtualenv -p python3.8 ENV
+        source ENV/bin/activate
 
 2. Install dependencies
     

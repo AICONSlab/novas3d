@@ -15,7 +15,7 @@ Welcome to NOVAS3D's documentation!
 and its chnages over time using 3D two-photon flourescent microscopy images from the 
 Functional Brain Imaging Lab. It can register images of an abitrary size to a reference frame.
 The pipeline is designed to be modular and flexible, allowing for easy integration of new
-segmentation models.It outputs a [networkx](https://github.com/networkx/networkx) graph representation of the segmented vasculature 
+segmentation models.It outputs a networkx graph representation of the segmented vasculature 
 network common to all timepoints. Each vessel segment is represented as an edge in the graph, 
 with the nodes as their branching points. The radius of each vessel segment is also stored 
 as an edge attribute.
