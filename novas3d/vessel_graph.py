@@ -205,6 +205,7 @@ class NeuronDistanceCalculator:
         neuron_distance_tag (str): Tag for neuron distance values.
         seg_tag (str): Tag for segmentation values.
         seg_nrn_tag (str): Tag for segmented neuron values.
+        skip_existing (bool): Whether to skip images that have already been predicted.
 
     Methods:
         calculate_distance(): Calculates the distance between neurons for each file in the given list.
@@ -355,6 +356,7 @@ class GraphGenerator:
         timepoint_suffixes (list): List of timepoint suffixes.
         IOU_thresh (float): IOU threshold.
         thresh_remove_terminal_segemnts (int): Threshold to remove terminal segments.
+        skip_existing (bool): Skip existing files that have already been processed.
 
     Methods:
         process_files(): Process the input files and generate graphs.

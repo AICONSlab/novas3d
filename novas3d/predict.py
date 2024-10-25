@@ -364,7 +364,7 @@ class PredictWarped:
         clip (bool): Whether to clip the values.
         channel_dim (int): The dimension index of the colour channel.
         gpu (bool): Whether to use the GPU.
-        skip_finished (bool): Whether to skip images that have already been predicted.
+        skip_existing (bool): Whether to skip images that have already been predicted.
     
     Methods:
         get_model(): Retrieves the model for prediction.
@@ -374,7 +374,7 @@ class PredictWarped:
 
     """
 
-    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=False, skip_finished=False):
+    def __init__(self, data_dict, config, parameter_file, spatial_dims, in_channels, out_channels, img_size, feature_size, hidden_size, mlp_dim, pos_embed, res_block, norm_name,spacing, i_min, i_max, b_min, b_max, clip, channel_dim, gpu=False, skip_existing=False):
         self.data_dict = data_dict
         self.config = config
         self.parameter_file = parameter_file
@@ -396,7 +396,7 @@ class PredictWarped:
         self.clip = clip
         self.channel_dim = channel_dim
         self.gpu = gpu
-        self.skip_finished = skip_finished
+        self.skip_existing = skip_existing
 
     def get_model(self):
         """
@@ -466,7 +466,7 @@ class PredictWarped:
         config = self.config
         with no_grad():
             for i, pred_data in tqdm(enumerate(pred_loader)):
-                if self.skip_finished==False:
+                if self.skip_existing==False:
                     new_file_name = sub(config["in_dir"], config["out_dir"], self.data_dict[i]["image"])
                     pred_array = predict(pred_data, num_evals=config["num_evals"], model=model)
                     #self.assertIsNotNone(pred_array)

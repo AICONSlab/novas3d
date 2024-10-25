@@ -124,13 +124,13 @@ class ImageRegistration:
         sigma (float): Sigma value for the registration.
         flip (bool): Whether to flip the moving image based on metadata. (only work on images aquired with olympus systems, set to false if not sure if images were aquired on an olympus microscope)
         dic (dictionary): dictionary of the image files with a reference image as the key and a list of moving images as the value.
-        skip_finished (bool): Whether to skip already registered images.
+        skip_existing (bool): Whether to skip already registered images.
     
     Returns:
         None
     """
 
-    def __init__(self, images, out_directory, in_filename_extension, final_filename_extension, timepoint_suffixes, sigma, flip, dic, skip_finished=False):
+    def __init__(self, images, out_directory, in_filename_extension, final_filename_extension, timepoint_suffixes, sigma, flip, dic, skip_existing=False):
         self.images = images
         self.out_directory = out_directory
         self.in_filename_extension = in_filename_extension
@@ -139,7 +139,7 @@ class ImageRegistration:
         self.sigma = sigma
         self.flip = flip
         self.dic = dic
-        self.skip_finished = skip_finished
+        self.skip_existing = skip_existing
 
     def register_images(self):
         for image in tqdm(self.images):
@@ -147,7 +147,7 @@ class ImageRegistration:
             warped_file = basename(dirname(fix_file)) + '-' + basename(fix_file)
             warped_file_path = self.out_directory + sub(self.in_filename_extension, self.final_filename_extension, warped_file)
                 
-            if self.skip_finished==False or not exists(warped_file_path):
+            if self.skip_existing==False or not exists(warped_file_path):
                 mov_files = get_mov_files(image, self.dic, self.in_filename_extension, self.timepoint_suffixes)
 
                 register_paired_images(fix_file,
