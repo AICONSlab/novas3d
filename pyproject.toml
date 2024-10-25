@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "novas3d"
-version = "0.1.1a36"
+version = "0.1.1a38"
 description = ""
 authors = ["Matthew Rozak <matthew.rozak@mail.utoronto.ca>"]
 readme = "README.md"

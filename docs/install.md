@@ -1,4 +1,4 @@
-# Local Install
+# Local Install and Tutorial
 
 ## Python
 For the main required Python packages (numpy, scipy, etc.) we recommend using
@@ -34,6 +34,8 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
         pip install git+https://github.com/Image-Py/sknw.git@18f18ab94794964a6dd7a76dd8a2c5c00dab6fd1
 
 3. Download example data
+     
+     Ensure [git-lfs](https://git-lfs.com/) is installed and enabled or else pickle files present in the example data and model files will not download properly.
 
         git clone https://huggingface.co/datasets/mrozak/novas3d_example_data
 
