@@ -9,7 +9,7 @@
 To install the current release run:
 
 ```bash
-pip install -i https://test.pypi.org/simple/ novas3d
+pip install novas3d
 pip install git+https://github.com/Image-Py/sknw.git@18f18ab94794964a6dd7a76dd8a2c5c00dab6fd1
 ```
 
