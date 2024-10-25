@@ -30,8 +30,8 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
 
 2. Install dependencies
     
-        pip install git+https://github.com/Image-Py/sknw.git@18f18ab94794964a6dd7a76dd8a2c5c00dab6fd1
         pip install --extra-index-url https://test.pypi.org/simple/ novas3d
+        pip install git+https://github.com/Image-Py/sknw.git@18f18ab94794964a6dd7a76dd8a2c5c00dab6fd1
 
 3. Download example data
 
