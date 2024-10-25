@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "novas3d"
-version = "0.1.1a38"
+version = "0.1.1a40"
 description = ""
 authors = ["Matthew Rozak <matthew.rozak@mail.utoronto.ca>"]
 readme = "README.md"
@@ -34,6 +34,7 @@ anyio = '4.5.0'
 ipython = '7.34.0'
 jsonschema-specifications = '2023.3.6'
 typing-extensions = '>=4.1'
+
 
 
 [build-system]

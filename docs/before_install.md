@@ -18,4 +18,4 @@ NOVAS3D is licensed under the terms of the *GNU General Public License v3.0*.
 
 NOVAS3D is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. You should have received a copy of GNU General Public License v3.0 along with HippMapp3r. 
 
-The code is released for academic research use only. For commercial use, please contact [maged.goubran@sri.utoronto.ca](mailto:maged.goubran@utoronto.ca).
+The code is released for academic research use only. For commercial use, please contact [matthew.rozak@mail.utoronto.ca](mailto:matthew.rozak@maul.utoronto.ca).

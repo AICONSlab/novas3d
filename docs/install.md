@@ -17,7 +17,7 @@ For the main required Python packages (numpy, scipy, etc.) we recommend using
 
     If you want to create a virtual environment where NOVAS3D can be run,
 
-        conda create -n novas3d python=3.8 anaconda
+        conda create -n novas3d python=3.8
         source activate novas3d
     
     To end the session, deactivate the environment
