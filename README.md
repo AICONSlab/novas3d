@@ -2,7 +2,7 @@
 
 ## What NOVAS3D does
 
-*NOVAS3D* (Network of Vessel Analysis in 3D) is a CNN-based pipeline to extarct vascular networks from 3D flourescent microscopy images and track their morphological changes across time.
+*NOVAS3D* (Network of Vessel Analysis in 3D) is a CNN-based pipeline to extract vascular networks from 3D fluorescent microscopy images and track their morphological changes across time.
 
 ## How to install NOVAS3D
 
@@ -34,4 +34,3 @@ Matthew Rozak James Mester Ahmadreza Attarpour Adrienne Dorr Shruti Patel Margar
 ____________________________
 
 For more details, see our [docs](https://novas3d.readthedocs.io/en/latest/index.html).
-
