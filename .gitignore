@@ -1,0 +1,6 @@
+novas3d_example_data/
+NOVAS3D_Vessel_and_Neuron_Segmentation/
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.DS_Store

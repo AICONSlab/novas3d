@@ -4,8 +4,10 @@ deltaSeed = uint32(feature('getpid'));
 seed = rngState.Seed + deltaSeed;
 rng(seed);
 
-in_dir = 'test_data/raw_warped_seg';
-out_dir = 'test_data/raw_warped_seg';
+disp("running...");
+
+in_dir = 'novas3d_example_data/raw_warped_seg';
+out_dir = 'novas3d_example_data/raw_warped_seg';
 in_suffix = '_seg_warped_single.mat';
 out_suffix = '_skel_warped_single.mat';
 

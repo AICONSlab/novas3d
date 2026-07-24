@@ -15,11 +15,21 @@ pip install git+https://github.com/Image-Py/sknw.git@18f18ab94794964a6dd7a76dd8a
 
 ## Get started using NOVAS3D
 
-For a tutorial on using the pipeline please see tutorial.ipynb
+For a tutorial on using the pipeline, please see `Tutorial.ipynb`.
+First, please ensure that you download the example data.
 
-### Downlaod example data
+### Download example data
 
 Ensure [git-lfs](https://git-lfs.com/) is installed and enabled or else pickle files present in the example data and model files will not download properly.
+
+For example, if you are running this code on a HPC such as Compute Canada, you can install `git-lfs` with the following commands:
+```bash
+module load git-lfs
+git lfs install
+```
+
+Inside of this directory, run the following commands to download the data.
+This will create both `novas3d_example_data` and `NOVAS3D_Vessel_and_Neuron_Segmentation` directories.
 
 ```bash
 git clone https://huggingface.co/datasets/mrozak/novas3d_example_data
